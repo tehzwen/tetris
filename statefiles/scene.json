@@ -1,0 +1,428 @@
+[
+    {
+        "objects": [
+            {
+                "name": "topWall",
+                "mode": "static",
+                "material": {
+                    "diffuse": [
+                        0.5882,
+                        0.5882,
+                        0.5882
+                    ],
+                    "ambient": [
+                        0.3,
+                        0.3,
+                        0.3
+                    ],
+                    "specular": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "n": 10.000002,
+                    "shaderType": 1,
+                    "alpha": 1
+                },
+                "type": "cube",
+                "position": [
+                    -0,
+                    4,
+                    0
+                ],
+                "scale": [
+                    19,
+                    1,
+                    4
+                ],
+                "diffuseTexture": "default.jpg",
+                "normalTexture": "defaultNorm.jpg",
+                "rotation": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "parent": null,
+                "model": null
+            },
+            {
+                "name": "backPlane",
+                "mode": "static",
+                "material": {
+                    "diffuse": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "ambient": [
+                        0.3,
+                        0.3,
+                        0.3
+                    ],
+                    "specular": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "n": 10.000002,
+                    "shaderType": 1,
+                    "alpha": "1"
+                },
+                "type": "plane",
+                "position": [
+                    0,
+                    0,
+                    0.5
+                ],
+                "scale": [
+                    16,
+                    1,
+                    16
+                ],
+                "diffuseTexture": "default.jpg",
+                "normalTexture": "defaultNorm.jpg",
+                "rotation": [
+                    1,
+                    -1.359889356677968e-8,
+                    1.518794157107095e-8,
+                    0,
+                    1.518797354549406e-8,
+                    0.0000022693059236189583,
+                    -1,
+                    0,
+                    1.3598858927821311e-8,
+                    1,
+                    0.0000022693059236189583,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "parent": null,
+                "model": null
+            },
+            {
+                "name": "glassPlane",
+                "mode": "static",
+                "material": {
+                    "diffuse": [
+                        0,
+                        0.9019607843137255,
+                        0.7490196078431373
+                    ],
+                    "ambient": [
+                        0.3,
+                        0.3,
+                        0.3
+                    ],
+                    "specular": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "n": 10.000002,
+                    "shaderType": 1,
+                    "alpha": "0.4"
+                },
+                "type": "plane",
+                "position": [
+                    0,
+                    0,
+                    -0.699999988079071
+                ],
+                "scale": [
+                    16,
+                    1,
+                    16
+                ],
+                "diffuseTexture": "default.jpg",
+                "normalTexture": "defaultNorm.jpg",
+                "rotation": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0.0000022693059236189583,
+                    -1,
+                    0,
+                    0,
+                    1,
+                    0.0000022693059236189583,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "parent": null,
+                "model": null
+            },
+            {
+                "name": "leftWall",
+                "mode": "static",
+                "material": {
+                    "diffuse": [
+                        0.5882,
+                        0.5882,
+                        0.5882
+                    ],
+                    "ambient": [
+                        0.3,
+                        0.3,
+                        0.3
+                    ],
+                    "specular": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "n": 10.000002,
+                    "shaderType": 1,
+                    "alpha": 1
+                },
+                "type": "cube",
+                "position": [
+                    -4.5,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    16,
+                    4
+                ],
+                "diffuseTexture": "default.jpg",
+                "normalTexture": "defaultNorm.jpg",
+                "rotation": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "parent": null,
+                "model": null
+            },
+            {
+                "name": "rightWall",
+                "mode": "static",
+                "material": {
+                    "diffuse": [
+                        0.5882,
+                        0.5882,
+                        0.5882
+                    ],
+                    "ambient": [
+                        0.3,
+                        0.3,
+                        0.3
+                    ],
+                    "specular": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "n": 10.000002,
+                    "shaderType": 1,
+                    "alpha": 1
+                },
+                "type": "cube",
+                "position": [
+                    4.5,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    16,
+                    4
+                ],
+                "diffuseTexture": "default.jpg",
+                "normalTexture": "defaultNorm.jpg",
+                "rotation": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "parent": null,
+                "model": null
+            },
+            {
+                "name": "bottomWall",
+                "mode": "static",
+                "material": {
+                    "diffuse": [
+                        0.5882,
+                        0.5882,
+                        0.5882
+                    ],
+                    "ambient": [
+                        0.3,
+                        0.3,
+                        0.3
+                    ],
+                    "specular": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "n": 10.000002,
+                    "shaderType": 1,
+                    "alpha": 1
+                },
+                "type": "cube",
+                "position": [
+                    0,
+                    -4,
+                    0
+                ],
+                "scale": [
+                    16,
+                    1,
+                    4
+                ],
+                "diffuseTexture": "default.jpg",
+                "normalTexture": "defaultNorm.jpg",
+                "rotation": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "parent": null,
+                "model": null
+            }
+        ],
+        "pointLights": [
+            {
+                "name": "pointLight1",
+                "colour": [
+                    1,
+                    1,
+                    1
+                ],
+                "position": [
+                    0,
+                    0,
+                    0
+                ],
+                "strength": 1,
+                "quadratic": 0.035,
+                "linear": 0.09,
+                "constant": 1,
+                "nearPlane": 0.5,
+                "farPlane": 100,
+                "shadow": 0
+            }
+        ],
+        "settings": {
+            "backgroundColor": [
+                0,
+                0,
+                0
+            ],
+            "camera": {
+                "name": "mainCamera",
+                "position": [
+                    0.6906984448432922,
+                    -0.026934264227747917,
+                    -7.364991664886475
+                ],
+                "front": [
+                    -0.020913718183243724,
+                    0.052335954989790615,
+                    0.9984105188784113
+                ],
+                "up": [
+                    0,
+                    1,
+                    0
+                ],
+                "pitch": 2.9999999999999942,
+                "yaw": 91.2000000000001,
+                "roll": 0,
+                "moveSpeed": 10,
+                "move": false,
+                "canvasFocused": false,
+                "rateX": 0,
+                "rateY": 0,
+                "keyboard": {
+                    "s": false,
+                    "a": false,
+                    "w": false,
+                    "d": false
+                },
+                "viewMatrix": {
+                    "0": -0.9997806549072266,
+                    "1": 0.0010960411746054888,
+                    "2": 0.02091371640563011,
+                    "3": 0,
+                    "4": 0,
+                    "5": 0.9986295104026794,
+                    "6": -0.0523359440267086,
+                    "7": 0,
+                    "8": -0.02094241790473461,
+                    "9": -0.05232446640729904,
+                    "10": -0.9984105229377747,
+                    "11": 0,
+                    "12": 0.5363062620162964,
+                    "13": -0.3592289388179779,
+                    "14": -7.369139671325684,
+                    "15": 1
+                },
+                "sensitivity": 0.4
+            }
+        }
+    }
+]
