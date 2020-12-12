@@ -150,7 +150,6 @@
                     15.5
                 ],
                 "diffuseTexture": "fingerprints.jpg",
-                "specularMap": "plywood.jpg",
                 "normalTexture": "defaultNorm.jpg",
                 "rotation": [
                     1,
