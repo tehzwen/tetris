@@ -11,6 +11,25 @@ function getObject(state, name) {
     return objectToFind;
 }
 
+function removeObject(state, name) {
+    let index;
+    for (let i = 0; i < state.objects.length; i++) {
+        if (state.objects[i].name === name) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index != null) {
+        state.objects[index].delete();
+        state.objects.splice(index, 1);
+    } else {
+        console.error("Couldn't delete " + name);
+        console.error(state.objects);
+    }
+
+}
+
 function intersect(a, b) {
     return (a.min[0] <= b.max[0] && a.max[0] >= b.min[0]) &&
         (a.min[1] <= b.max[1] && a.max[1] >= b.min[1]) &&

@@ -55,7 +55,7 @@ function main() {
         void main() {
             // Postion of the fragment in world space
             gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.0);
-            normalInterp = normalize((normalMatrix * vec4(aNormal, 1.0)).xyz);
+            normalInterp = normalize((normalMatrix * vec4(aNormal, 0.0)).xyz);
             oUV = vec2(-aUV[0], aUV[1]);
             oFragPosition = (uModelMatrix * vec4(aPosition, 1.0)).xyz;
             oNormal = aNormal;
@@ -72,6 +72,8 @@ function main() {
             vec3 position;
             vec3 colour;
             float strength;
+            float linear;
+            float quadratic;
         };
 
         in vec2 oUV;
@@ -93,35 +95,41 @@ function main() {
 
 
         vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 diffuseValue) {
-            vec3 ambient = ambientVal * light.colour * diffuseValue;
+            vec3 ambient = ambientVal;
             vec3 lightDir = normalize(light.position - oFragPosition);
-            float distance = distance(light.position, oFragPosition);
+            float dist = length(light.position - oFragPosition);
             float diff = max(dot(normal, lightDir), 0.0);
             vec3 diffuse = diffuseValue * light.colour * diff;
 
             vec3 viewDir = normalize(oCameraPosition - oFragPosition);
             vec3 reflectDir = reflect(-lightDir, normal);  
             float spec = pow(max(dot(viewDir, reflectDir), 0.0), nVal);
-            vec3 specular = light.colour * (spec * specularVal);  
+            vec3 specular = light.colour * (spec * specularVal); 
 
-            float attenuation = light.strength / 1.0 + 0.01 * distance + 0.005 * (distance * distance);
+            float attenuation = light.strength / (1.0 + light.linear * dist + light.quadratic * (dist * dist));
+            ambient *= attenuation;
+            diffuse *= attenuation;
+            specular *= attenuation;
 
-            return attenuation * (ambient + diffuse + specular);
+            return ambient + diffuse + specular;
+            // return diffuse;
+            // return ambient;
         }
 
 
         void main() {
             vec3 total = vec3(0,0,0);
+            vec3 normal = normalize(normalInterp);
 
             for (int i = 0; i < numLights; i++) {
                 if (samplerExists == 1) {
                     vec3 textureColour = texture(uTexture, oUV).rgb;
                     vec3 diffuseValue = diffuseVal * textureColour;
-                    total += CalculatePointLight(pointLights[i], normalInterp, diffuseValue);
+                    total += CalculatePointLight(pointLights[i], normal, diffuseValue);
     
                 } else {
                     // fragColor = vec4(diffuseVal, alpha);
-                    total += CalculatePointLight(pointLights[i], normalInterp, diffuseVal);
+                    total += CalculatePointLight(pointLights[i], normal, diffuseVal);
                 }
             }
 
@@ -253,12 +261,10 @@ function drawScene(gl, deltaTime, state) {
     gl.enable(gl.DEPTH_TEST); // Enable depth testing
     gl.depthFunc(gl.LEQUAL); // Near things obscure far things
     gl.disable(gl.CULL_FACE); // Cull the backface of our objects to be more efficient
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     gl.clearDepth(1.0); // Clear everything
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-    let mainLight = state.pointLights[0];
 
     // sort objects by nearness to camera
     let sorted = state.objects.sort((a, b) => {
@@ -279,6 +285,9 @@ function drawScene(gl, deltaTime, state) {
         if (object.loaded && object.render) {
             gl.useProgram(object.programInfo.program);
             {
+
+                gl.uniform1i(gl.getUniformLocation(object.programInfo.program, 'numLights'), state.pointLights.length);
+
 
                 if (object.material.alpha < 1.0) {
                     gl.disable(gl.CULL_FACE);
@@ -336,13 +345,6 @@ function drawScene(gl, deltaTime, state) {
                 }
                 gl.uniformMatrix4fv(object.programInfo.uniformLocations.model, false, modelMatrix);
 
-                //check collisions
-                // get state.objects that are collidable state.objects.filter((object) => {if (object.collide) return object})
-                // COLLISION
-                // if (object we collided with.onCollide) colObject.onCollide(object)
-                // if (thisobject.onCollide) object.onCollide(colObject)
-
-
                 // Normal Matrix ....
                 let normalMatrix = mat4.create();
                 mat4.invert(normalMatrix, modelMatrix);
@@ -356,23 +358,16 @@ function drawScene(gl, deltaTime, state) {
                 gl.uniform1f(object.programInfo.uniformLocations.nVal, object.material.n);
                 gl.uniform1f(object.programInfo.uniformLocations.alpha, object.material.alpha);
 
-                gl.uniform3fv(gl.getUniformLocation(object.programInfo.program, 'mainLight.position'), mainLight.position);
-                gl.uniform3fv(gl.getUniformLocation(object.programInfo.program, 'mainLight.colour'), mainLight.colour);
-                gl.uniform1f(gl.getUniformLocation(object.programInfo.program, 'mainLight.strength'), mainLight.strength);
-
 
                 if (state.pointLights.length > 0) {
-                    gl.uniform1i(object.programInfo.uniformLocations.numLights, state.pointLights.length);
-
                     for (let i = 0; i < state.pointLights.length; i++) {
                         gl.uniform3fv(gl.getUniformLocation(object.programInfo.program, 'pointLights[' + i + '].position'), state.pointLights[i].position);
                         gl.uniform3fv(gl.getUniformLocation(object.programInfo.program, 'pointLights[' + i + '].colour'), state.pointLights[i].colour);
                         gl.uniform1f(gl.getUniformLocation(object.programInfo.program, 'pointLights[' + i + '].strength'), state.pointLights[i].strength);
+                        gl.uniform1f(gl.getUniformLocation(object.programInfo.program, 'pointLights[' + i + '].linear'), state.pointLights[i].linear);
+                        gl.uniform1f(gl.getUniformLocation(object.programInfo.program, 'pointLights[' + i + '].quadratic'), state.pointLights[i].quadratic);
                     }
-                    // this currently only sends the first light to the shader, how might we do multiple? :)
-
                 }
-
 
                 {
                     // Bind the buffer we want to draw

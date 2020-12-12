@@ -5,7 +5,7 @@ class SingleCube extends GamePiece {
         this.boardPosition = boardPosition;
 
         this.cube = new Cube(state.gl, {
-            name: "single-cube",
+            name: "single-cube" + state.gamePieceNum,
             position: [
                 position[0],
                 position[1],
@@ -20,16 +20,16 @@ class SingleCube extends GamePiece {
             material: {
                 diffuse: color,
                 ambient: [
-                    0.3,
-                    0.3,
-                    0.3
+                    0.1,
+                    0.1,
+                    0.1
                 ],
                 specular: [
                     0.5,
                     0.5,
                     0.5
                 ],
-                n: 10.000002,
+                n: 500,
                 shaderType: 1,
                 alpha: 1
             }

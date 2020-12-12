@@ -275,6 +275,13 @@ class Cube {
         }
     }
 
+    delete() {
+        Object.keys(this.buffers.attributes).forEach((key) => {
+            this.gl.deleteBuffer(this.buffers.attributes[key]);
+        })
+        this.gl.deleteBuffer(this.buffers.indicies);
+    }
+
     setup() {
         this.centroid = calculateCentroid(this.model.vertices.flat());
         this.lightingShader();

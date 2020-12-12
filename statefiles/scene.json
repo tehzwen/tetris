@@ -11,9 +11,9 @@
                         0.5882
                     ],
                     "ambient": [
-                        0.3,
-                        0.3,
-                        0.3
+                        0.1,
+                        0.1,
+                        0.1
                     ],
                     "specular": [
                         0.5,
@@ -68,16 +68,16 @@
                         0
                     ],
                     "ambient": [
-                        0.3,
-                        0.3,
-                        0.3
+                        0.1,
+                        0.1,
+                        0.1
                     ],
                     "specular": [
-                        0.5,
-                        0.5,
-                        0.5
+                        0.1,
+                        0.1,
+                        0.1
                     ],
-                    "n": 10.000002,
+                    "n": 5000,
                     "shaderType": 1,
                     "alpha": "1"
                 },
@@ -121,22 +121,22 @@
                 "material": {
                     "diffuse": [
                         0,
+                        0.4,
+                        0.2
+                    ],
+                    "ambient": [
+                        0.1,
+                        0.1,
+                        0.1
+                    ],
+                    "specular": [
+                        0,
                         0.9019607843137255,
                         0.7490196078431373
                     ],
-                    "ambient": [
-                        0.3,
-                        0.3,
-                        0.3
-                    ],
-                    "specular": [
-                        0.5,
-                        0.5,
-                        0.5
-                    ],
-                    "n": 10.000002,
+                    "n": 5000,
                     "shaderType": 1,
-                    "alpha": "0.4"
+                    "alpha": 0.4
                 },
                 "type": "plane",
                 "position": [
@@ -182,9 +182,9 @@
                         0.5882
                     ],
                     "ambient": [
-                        0.3,
-                        0.3,
-                        0.3
+                        0.1,
+                        0.1,
+                        0.1
                     ],
                     "specular": [
                         0.5,
@@ -239,9 +239,9 @@
                         0.5882
                     ],
                     "ambient": [
-                        0.3,
-                        0.3,
-                        0.3
+                        0.1,
+                        0.1,
+                        0.1
                     ],
                     "specular": [
                         0.5,
@@ -296,9 +296,9 @@
                         0.5882
                     ],
                     "ambient": [
-                        0.3,
-                        0.3,
-                        0.3
+                        0.1,
+                        0.1,
+                        0.1
                     ],
                     "specular": [
                         0.5,
@@ -346,18 +346,178 @@
         ],
         "pointLights": [
             {
+                "name": "pointLight2",
+                "colour": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "position": [
+                    -3,
+                    4,
+                    -2
+                ],
+                "strength": 0.5,
+                "quadratic": 0.035,
+                "linear": 0.09,
+                "constant": 1,
+                "nearPlane": 0.5,
+                "farPlane": 100,
+                "shadow": 0
+            },
+            {
                 "name": "pointLight1",
                 "colour": [
-                    1,
-                    1,
-                    1
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "position": [
+                    0,
+                    4,
+                    -2
+                ],
+                "strength": 0.25,
+                "quadratic": 0.035,
+                "linear": 0.09,
+                "constant": 1,
+                "nearPlane": 0.5,
+                "farPlane": 100,
+                "shadow": 0
+            },
+            {
+                "name": "pointLight3",
+                "colour": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "position": [
+                    3,
+                    4,
+                    -2
+                ],
+                "strength": 0.5,
+                "quadratic": 0.035,
+                "linear": 0.09,
+                "constant": 1,
+                "nearPlane": 0.5,
+                "farPlane": 100,
+                "shadow": 0
+            },
+            {
+                "name": "midLight1",
+                "colour": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "position": [
                     0,
                     0,
-                    0
+                    -2
                 ],
-                "strength": 1,
+                "strength": 0.35,
+                "quadratic": 0.035,
+                "linear": 0.09,
+                "constant": 1,
+                "nearPlane": 0.5,
+                "farPlane": 100,
+                "shadow": 0
+            },
+            {
+                "name": "midLight2",
+                "colour": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "position": [
+                    -4,
+                    0,
+                    -2
+                ],
+                "strength": 0.35,
+                "quadratic": 0.035,
+                "linear": 0.09,
+                "constant": 1,
+                "nearPlane": 0.5,
+                "farPlane": 100,
+                "shadow": 0
+            },
+            {
+                "name": "midLight3",
+                "colour": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "position": [
+                    4,
+                    0,
+                    -2
+                ],
+                "strength": 0.35,
+                "quadratic": 0.035,
+                "linear": 0.09,
+                "constant": 1,
+                "nearPlane": 0.5,
+                "farPlane": 100,
+                "shadow": 0
+            },
+            {
+                "name": "pointLight4",
+                "colour": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "position": [
+                    -4,
+                    -4,
+                    -2
+                ],
+                "strength": 0.5,
+                "quadratic": 0.035,
+                "linear": 0.09,
+                "constant": 1,
+                "nearPlane": 0.5,
+                "farPlane": 100,
+                "shadow": 0
+            },
+            {
+                "name": "pointLight5",
+                "colour": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "position": [
+                    4,
+                    -4,
+                    -2
+                ],
+                "strength": 0.5,
+                "quadratic": 0.035,
+                "linear": 0.09,
+                "constant": 1,
+                "nearPlane": 0.5,
+                "farPlane": 100,
+                "shadow": 0
+            },
+            {
+                "name": "pointLight6",
+                "colour": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "position": [
+                    0,
+                    -4,
+                    -2
+                ],
+                "strength": 0.25,
                 "quadratic": 0.035,
                 "linear": 0.09,
                 "constant": 1,
