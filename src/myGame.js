@@ -1,23 +1,19 @@
 // If you want to use globals here you can. Initialize them in startGame then update/change them in gameLoop
 
 const GAME_PIECE_NAMES = ["square", "lblock", "rblock", "pillar", "three", "rsmall", "lsmall"];
-// const GAME_PIECE_NAMES = ["rsmall"];
 const GRAV_STEP = 0.5;
-const FLOOR = -3.5;
 var timeCount = 0.0;
 var timeStep = 0.5;
 var cubeSize = 0.5;
 var numRotations = 0;
 var score = 0;
 var board = [];
+var gameOver = false;
 
-/**
- * 
- * @param { Object - Game state } state 
- * @usage Use this function for initializing any in game values in our state or adding event listeners
- */
-function startGame(state) {
-    // state.spawn = getObject(state, "spawnPoint");
+function createTetrisBoard() {
+    score = 0;
+    numRotations = 0;
+    timeStep = 0.5;
     let leftWall = getObject(state, "leftWall");
     let rightWall = getObject(state, "rightWall");
     let topWall = getObject(state, "topWall");
@@ -48,26 +44,23 @@ function startGame(state) {
     }
 
     state.gamePieceNum = 0;
+}
 
+/**
+ * 
+ * @param { Object - Game state } state 
+ * @usage Use this function for initializing any in game values in our state or adding event listeners
+ */
+function startGame(state) {
+
+    createTetrisBoard();
     //this just prevents right click from opening up the context menu :)
     document.addEventListener("contextmenu", (e) => {
         e.preventDefault();
     }, false);
 
     document.addEventListener('keydown', (e) => {
-        if (e.code === "KeyX") {
-            if (!state.gamePieces.length > 0) {
-                spawnGamePiece(state);
-            }
-        } else if (e.code === "KeyP") {
-            console.warn(state.board.board);
-            console.warn(score);
-            console.warn(timeStep);
-        } else if (e.code === "KeyQ") {
-            if (!state.gamePieces.length > 0) {
-                spawnGamePiece(state, true);
-            }
-        } else if (e.code === "KeyD") {
+        if (e.code === "KeyD") {
             // check if at edge
             if (state.gamePieces.length > 0) {
                 let canMove = [];
@@ -359,7 +352,6 @@ function canMove(state) {
         }
     });
 
-    // console.log(val)
     return val;
 }
 
@@ -622,18 +614,45 @@ function checkForTetris() {
                 state.board.board[object.boardPosition[0]][object.boardPosition[1]].occupied = false;
                 removeObject(state, object.cube.name);
             });
+        } else if (tempTetris.length === state.board.board[i].length - 2) {
+            tempTetris.forEach((object) => {
+                object.cube.blinking = true;
+            });
         } else {
             leftOverPieces = leftOverPieces.concat(tempTetris);
         }
     }
 
+
     if (state.tetris) {
         leftOverPieces.forEach((object) => {
-            state.board.board[object.boardPosition[0]][object.boardPosition[1]].occupied = false;
-            state.gamePieces.push(object);
+            let pos = object.boardPosition;
+            if (pos[0] !== 0 && !state.board.board[pos[0] - 1][pos[1]].occupied) {
+                state.board.board[object.boardPosition[0]][object.boardPosition[1]].occupied = false;
+                state.gamePieces.push(object);
+            }
         });
+    }
+}
 
-        state.tetris = false;
+function checkForGameEnd() {
+    for (let i = 0; i < state.board.board[0].length; i++) {
+        if (state.board.board[state.board.board.length - 1][i].occupied) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function cleanupBoard() {
+    for (let i = 0; i < state.board.board.length; i++) {
+        for (let j = 1; j < state.board.board[i].length; j++) {
+            if (state.board.board[i][j].cube) {
+                state.board.board[i][j].cube = null;
+                state.board.board[i][j].occupied = false;
+            }
+        }
     }
 }
 
@@ -647,25 +666,52 @@ function gameLoop(state, deltaTime) {
     if (timeCount < timeStep) {
         timeCount += deltaTime;
 
-        checkForTetris();
-
-        let canMoves = canMove(state);
-        if (!canMoves.includes(false)) {
-            state.canMove = true;
+        if (state.gamePieces.length === 0 && state.gamePieceNum > 0) {
+            state.shake = true;
         } else {
-            if (canMoves.length === state.gamePieces.length) {
-                state.gamePieces.forEach((obj) => {
-                    let pos = obj.boardPosition;
-                    state.board.board[pos[0]][pos[1]].occupied = true;
-                    state.board.board[pos[0]][pos[1]].cube = obj;
-                })
-                state.gamePieces = [];
-                numRotations = 0;
-            }
-            state.canMove = false;
+            state.shake = false;
         }
+
+        if (!checkForGameEnd()) {
+            checkForTetris();
+
+            let canMoves = canMove(state);
+            if (!canMoves.includes(false)) {
+                state.canMove = true;
+            } else {
+                if (canMoves.length === state.gamePieces.length) {
+                    state.gamePieces.forEach((obj) => {
+                        let pos = obj.boardPosition;
+                        state.board.board[pos[0]][pos[1]].occupied = true;
+                        state.board.board[pos[0]][pos[1]].cube = obj;
+                    });
+                    state.tetris = false;
+                    state.gamePieces = [];
+                    numRotations = 0;
+                }
+                state.canMove = false;
+            }
+        } else {
+            gameOver = true;
+            alert("GAME OVER");
+            state.objects = state.objects.filter((object) => {
+                if (!object.name.includes("single-cube")) {
+                    return object;
+                }
+            })
+            cleanupBoard();
+            gameOver = false;
+        }
+
     } else {
-        timeCount = 0.0;
-        applyForce(state);
+        if (!gameOver) {
+            // drop pieces automatically here 
+            if (!state.gamePieces.length > 0) {
+                spawnGamePiece(state);
+            }
+
+            timeCount = 0.0;
+            applyForce(state);
+        }
     }
 }

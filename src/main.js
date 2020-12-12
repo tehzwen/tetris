@@ -45,6 +45,8 @@ function main() {
         uniform mat4 uModelMatrix;
         uniform mat4 normalMatrix;
         uniform vec3 uCameraPosition;
+        uniform bool shake;
+        uniform float time;
 
         out vec2 oUV;
         out vec3 oFragPosition;
@@ -53,13 +55,19 @@ function main() {
         out vec3 oCameraPosition;
 
         void main() {
-            // Postion of the fragment in world space
+            // Position of the fragment in world space
             gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.0);
             normalInterp = normalize((normalMatrix * vec4(aNormal, 0.0)).xyz);
-            oUV = vec2(-aUV[0], aUV[1]);
+            // oUV = vec2(-aUV[0], aUV[1]);
+            oUV = aUV;
             oFragPosition = (uModelMatrix * vec4(aPosition, 1.0)).xyz;
             oNormal = aNormal;
             oCameraPosition = uCameraPosition;
+
+            if (shake) {
+                gl_Position.x += cos(time * 10.0) * 0.01;
+                gl_Position.y += cos(time * 15.0) * 0.01;
+            }
         }
         `;
 
@@ -84,11 +92,13 @@ function main() {
         uniform vec3 diffuseVal;
         uniform vec3 ambientVal;
         uniform vec3 specularVal;
+        uniform float time;
         uniform float alpha;
         uniform float nVal;
-        uniform int samplerExists;
+        uniform bool samplerExists;
         uniform sampler2D uTexture;
         uniform int numLights;
+        uniform bool blinking;
         uniform PointLight[MAX_LIGHTS] pointLights;
 
         out vec4 fragColor;
@@ -111,31 +121,33 @@ function main() {
             diffuse *= attenuation;
             specular *= attenuation;
 
-            return ambient + diffuse + specular;
-            // return diffuse;
-            // return ambient;
-        }
+            // apply a specular texture
+            if (samplerExists) {
+                specular *= texture(uTexture, oUV).rgb;
+                return (ambient + diffuse + specular);
 
+            } else {
+                if (blinking) {
+                    return ((sin(3.0 * time) * 0.2) + 0.8) * (ambient + diffuse + specular);
+                } else {
+                    return ambient + diffuse + specular;
+                }
+            }
+        }
 
         void main() {
             vec3 total = vec3(0,0,0);
             vec3 normal = normalize(normalInterp);
 
             for (int i = 0; i < numLights; i++) {
-                if (samplerExists == 1) {
-                    vec3 textureColour = texture(uTexture, oUV).rgb;
-                    vec3 diffuseValue = diffuseVal * textureColour;
-                    total += CalculatePointLight(pointLights[i], normal, diffuseValue);
-    
-                } else {
-                    // fragColor = vec4(diffuseVal, alpha);
-                    total += CalculatePointLight(pointLights[i], normal, diffuseVal);
-                }
+                total += CalculatePointLight(pointLights[i], normal, diffuseVal);
             }
 
             fragColor = vec4(total, alpha);
         }
         `;
+
+    // x = (oUV + vec2(cos(d),sin(d))*Radius*i)
 
     /**
      * Initialize state with new values (some of these you can replace/change)
@@ -154,7 +166,8 @@ function main() {
         gameStarted: false,
         samplerExists: 0,
         samplerNormExists: 0,
-        constVal: 1
+        constVal: 1,
+        shake: false
     };
 
     state.numLights = state.pointLights.length;
@@ -287,8 +300,6 @@ function drawScene(gl, deltaTime, state) {
             {
 
                 gl.uniform1i(gl.getUniformLocation(object.programInfo.program, 'numLights'), state.pointLights.length);
-
-
                 if (object.material.alpha < 1.0) {
                     gl.disable(gl.CULL_FACE);
                     gl.disable(gl.DEPTH_TEST);
@@ -358,6 +369,13 @@ function drawScene(gl, deltaTime, state) {
                 gl.uniform1f(object.programInfo.uniformLocations.nVal, object.material.n);
                 gl.uniform1f(object.programInfo.uniformLocations.alpha, object.material.alpha);
 
+                // give the shader the current time value
+                gl.uniform1f(gl.getUniformLocation(object.programInfo.program, 'time'), state.time);
+                gl.uniform1f(gl.getUniformLocation(object.programInfo.program, 'shake'), state.shake);
+
+                if (object.blinking) {
+                    gl.uniform1i(gl.getUniformLocation(object.programInfo.program, 'blinking'), true);
+                }
 
                 if (state.pointLights.length > 0) {
                     for (let i = 0; i < state.pointLights.length; i++) {
@@ -384,19 +402,6 @@ function drawScene(gl, deltaTime, state) {
                         gl.activeTexture(gl.TEXTURE0);
                         state.samplerExists = 0;
                         gl.uniform1i(object.programInfo.uniformLocations.samplerExists, state.samplerExists);
-                    }
-
-                    //check for normal texture and apply it
-                    if (object.material.shaderType === 4) {
-                        state.samplerNormExists = 1;
-                        gl.activeTexture(gl.TEXTURE1);
-                        gl.uniform1i(object.programInfo.uniformLocations.normalSamplerExists, state.samplerNormExists);
-                        gl.uniform1i(object.programInfo.uniformLocations.normalSampler, 1);
-                        gl.bindTexture(gl.TEXTURE_2D, object.model.textureNorm);
-                    } else {
-                        gl.activeTexture(gl.TEXTURE1);
-                        state.samplerNormExists = 0;
-                        gl.uniform1i(object.programInfo.uniformLocations.normalSamplerExists, state.samplerNormExists);
                     }
 
                     // Draw the object
