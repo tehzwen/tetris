@@ -1,3 +1,7 @@
+Simple implementation of Tetris game using WebGL for demo purposes, currently live at https://tehzwen.com/tetris/
+
+
+Refinery Engine Details:
 Description of folders/files:
 
 /lib                        -> 3rd party libraries we use
